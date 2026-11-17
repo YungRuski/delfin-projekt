@@ -1,15 +1,14 @@
+
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MemberCompetitive extends Member{
-   private String disciplin;
-   private String competition;
-   private LocalDate dateOfCompetition;
 
-   public MemberCompetitive(int memberID, String name, LocalDate dateOfBirth, String disciplin, String competition, LocalDate dateOfCompetition) {
-      super(memberID, name, dateOfBirth);
-      this.disciplin = disciplin;
-      this.competition = competition;
-      this.dateOfCompetition = dateOfCompetition;
+   List<CompetitionResult> competitionResults;
+
+   public MemberCompetitive(int memberID, String name, LocalDate dateOfBirth) {
+      super(memberID, name, dateOfBirth, true);
+      this.competitionResults = new ArrayList<>();
    }
-
 }

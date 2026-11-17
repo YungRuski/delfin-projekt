@@ -15,22 +15,30 @@ public class Member{
         this.dateOfBirth = LocalDate.of(year, month, day);
     }
 
-    public Member(int memberID, String name, LocalDate dateOfBirth) {
+    public Member(int memberID, String name, LocalDate dateOfBirth, boolean memberStatus) {
+        this.memberID = memberID;
+        this.name = name;
+        this.dateOfBirth = dateOfBirth;
+        this.memberStatus = memberStatus;
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public LocalDate getDateOfBirth() {
-        return this.dateOfBirth;
+        return dateOfBirth;
     }
 
     public int getMemberID() {
-        return this.memberID;
+        return memberID;
     }
 
-    public int calculateAge() {
-        return Period.between(getDateOfBirth(), LocalDate.now()).getYears();
+    public int calculateAge(LocalDate date) {
+        return Period.between(getDateOfBirth(), date).getYears();
+    }
+
+    public boolean isActive(){
+        return memberStatus;
     }
 }

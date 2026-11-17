@@ -1,16 +1,16 @@
 import java.time.LocalDate;
 
 public class MemberFee {
-    private Member member;
 
-    public int calculateFee(LocalDate date, boolean isActive) {
-        if (!isActive) {
+    public int calculateFee(LocalDate date, Member member) {
+        if (!member.isActive()) {
             return 500;
         }
-        if (LocalDate.now().minusYears(18).isBefore(date) ) {
+        int age = member.calculateAge(date);
+        if (age < 18) {
             return 1000;
         }
-        if (LocalDate.now().minusYears(60).isBefore(date)) {
+        if (age < 60) {
             return 1600;
         } else {
             return 1200;
