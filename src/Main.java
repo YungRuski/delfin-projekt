@@ -4,7 +4,6 @@ void main() {
   Member member2 = new Member(1123, "Jan", LocalDate.of(1960, 6, 4), true);
   Member member3 = new Member(1123, "Tom", LocalDate.of(1999, 9, 17), true);
 
-
   Club club = new Club();
  club.addMember(member1);
  club.addMember(member2);
