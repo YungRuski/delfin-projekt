@@ -7,13 +7,6 @@ public class Member{
     private String name;
     private LocalDate dateOfBirth;
     private boolean memberStatus;
-    private boolean competition;
-
-    public Member(int memberID, String name, int year, int month, int day) {
-        this.memberID = memberID;
-        this.name = name;
-        this.dateOfBirth = LocalDate.of(year, month, day);
-    }
 
     public Member(int memberID, String name, LocalDate dateOfBirth, boolean memberStatus) {
         this.memberID = memberID;
@@ -35,10 +28,25 @@ public class Member{
     }
 
     public int calculateAge(LocalDate date) {
-        return Period.between(getDateOfBirth(), date).getYears();
+        return Period.between(date ,LocalDate.now()).getYears();
     }
 
     public boolean isActive(){
         return memberStatus;
+    }
+
+    public double calculateFee() {
+        if (!isActive()) {
+            return 500;
+        }
+        int age = calculateAge(dateOfBirth);
+        if (age < 18) {
+            return 1000;
+        }
+        if (age < 60) {
+            return 1600;
+        } else {
+            return 1200;
+        }
     }
 }
