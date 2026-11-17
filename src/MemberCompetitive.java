@@ -5,10 +5,14 @@ import java.util.List;
 
 public class MemberCompetitive extends Member{
 
-   List<CompetitionResult> competitionResults;
+   private List<CompetitionResult> competitionResults;
 
    public MemberCompetitive(int memberID, String name, LocalDate dateOfBirth) {
       super(memberID, name, dateOfBirth, true);
       this.competitionResults = new ArrayList<>();
+   }
+
+   public void addCompetitionResult(CompetitionResult result) {
+      competitionResults.add(result);
    }
 }
