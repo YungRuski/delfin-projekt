@@ -1,5 +1,3 @@
-import java.util.List;
-
 public class Chairman {
     private String username;
     private String password;
@@ -8,5 +6,4 @@ public class Chairman {
         this.username = username;
         this.password = password;
     }
-
 }
