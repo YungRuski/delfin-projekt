@@ -9,9 +9,4 @@ public class Chairman {
         this.password = password;
     }
 
-    public void addMember(List<Member> members, Member member) {
-        members.add(member);
-    }
-
-
 }

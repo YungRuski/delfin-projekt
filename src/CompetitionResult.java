@@ -7,7 +7,7 @@ public class CompetitionResult {
   private String competition;
   private int placement;
   private double time;
-  LocalDate date;
+  private LocalDate date;
 
   public CompetitionResult(String disciplin, String competition, int placement, double time, LocalDate date) {
     this.disciplin = disciplin;

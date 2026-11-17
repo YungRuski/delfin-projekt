@@ -3,6 +3,7 @@ import java.util.List;
 
 public class Club {
   private List<Member> members;
+  private Chairman chairman;
 
   public Club(){
     this.members = new ArrayList<>();
