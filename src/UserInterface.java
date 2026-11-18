@@ -1,7 +1,7 @@
 public class UserInterface {
     private Club club;
 
-    public UserInterface() {
+    public UserInterface(Club club) {
         this.club = club;
     }
 
