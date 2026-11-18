@@ -49,4 +49,15 @@ public class Member{
             return 1200;
         }
     }
+
+    @Override
+    public String toString() {
+        String status = memberStatus ? "Aktiv" : "Passiv";
+        return String.format("""
+                ID: %d
+                Navn: %s
+                Fødselsdato: %s
+                Medlemsstatus: %s
+                """, getMemberID(), getName(), getDateOfBirth(), status);
+    }
 }

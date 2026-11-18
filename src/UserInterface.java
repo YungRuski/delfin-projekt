@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+
 public class UserInterface {
     private Club club;
 
@@ -12,6 +14,8 @@ public class UserInterface {
             int choice = Integer.parseInt(IO.readln("Vælg et nummer fra menuen: "));
             switch (choice) {
                 case 1 -> chairmanLogin();
+
+                case 0 -> running = false;
             }
         }
     }
@@ -28,7 +32,7 @@ public class UserInterface {
 
     public void chairmanLogin() {
         String chairmanUsername = "ostemad";
-        String chairmanPassword = "svømning123";
+        String chairmanPassword = "ostemad123";
         IO.println("*******************");
         String username = IO.readln("Username: ");
         String password = IO.readln("Password: ");
@@ -38,14 +42,38 @@ public class UserInterface {
             int choice = Integer.parseInt(IO.readln("Vælg medlems form: "));
             switch (choice) {
                 case 1 -> {
-                    IO.readln("");
+                    int memberID = Integer.parseInt(IO.readln("Indtast medlemsnummer: "));
+                    String name = IO.readln("Indtast navn på medlem: ");
+                    LocalDate dateOfBirth = LocalDate.parse(IO.readln("Indtast medlemmets fødselsdato (YYYY-MM-DD): "));
+
+                    int statusChoice = Integer.parseInt(IO.readln("""
+                            Vælg medlemsstatus:
+                            1. Aktiv
+                            2. Passiv \n"""));
+                    boolean isActive;
+                    while (statusChoice != 1 && statusChoice != 2) {
+                       statusChoice = Integer.parseInt(IO.readln("Tast gyldigt indput"));
+                    }
+                    if (statusChoice == 1) {
+                        isActive = true;
+                    } else {
+                        isActive = false;
+                    }
+                    club.addMember(new Member(memberID, name, dateOfBirth, isActive));
+                    for (Member member : club.getMembers()) {
+                        IO.println(member);
+                    }
+                }
+                case 2 -> {
+
                 }
             }
-
         } else {
-            IO.println("Forkert brugernavn, eller kodeord");
+            IO.println("Forkert brugernavn eller kodeord");
         }
+
     }
 }
+
 
 
