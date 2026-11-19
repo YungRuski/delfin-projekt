@@ -32,4 +32,8 @@ public class CompetitionResult {
   public double getTime() {
     return time;
   }
+
+  public LocalDate getDate(){
+    return date;
+  }
 }

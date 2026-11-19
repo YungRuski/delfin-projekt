@@ -58,6 +58,7 @@ public class Member{
                 Navn: %s
                 Fødselsdato: %s
                 Medlemsstatus: %s
+                Medlemstype: Motionist
                 """, getMemberID(), getName(), getDateOfBirth(), status);
     }
 }

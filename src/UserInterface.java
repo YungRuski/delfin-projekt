@@ -1,10 +1,14 @@
+import java.io.IOException;
+import java.nio.file.Path;
 import java.time.LocalDate;
 
 public class UserInterface {
     private Club club;
+    private ClubSaver saver;
 
-    public UserInterface(Club club) {
+    public UserInterface(Club club, ClubSaver saver) {
         this.club = club;
+        this.saver = saver;
     }
 
     public void run() {
@@ -42,7 +46,7 @@ public class UserInterface {
             int choice = Integer.parseInt(IO.readln("Vælg medlems form: "));
             switch (choice) {
                 case 1 -> {
-                    int memberID = Integer.parseInt(IO.readln("Indtast medlemsnummer: "));
+                    int memberID = getAvailableMemberID();
                     String name = IO.readln("Indtast navn på medlem: ");
                     LocalDate dateOfBirth = LocalDate.parse(IO.readln("Indtast medlemmets fødselsdato (YYYY-MM-DD): "));
 
@@ -52,7 +56,7 @@ public class UserInterface {
                             2. Passiv \n"""));
                     boolean isActive;
                     while (statusChoice != 1 && statusChoice != 2) {
-                       statusChoice = Integer.parseInt(IO.readln("Tast gyldigt indput"));
+                        statusChoice = Integer.parseInt(IO.readln("Tast gyldigt indput"));
                     }
                     if (statusChoice == 1) {
                         isActive = true;
@@ -60,18 +64,38 @@ public class UserInterface {
                         isActive = false;
                     }
                     club.addMember(new Member(memberID, name, dateOfBirth, isActive));
-                    for (Member member : club.getMembers()) {
-                        IO.println(member);
-                    }
+                    saveMembers();
                 }
                 case 2 -> {
-
+                    int memberID = getAvailableMemberID();
+                    String name = IO.readln("Indtast navn på medlem: ");
+                    LocalDate dateOfBirth = LocalDate.parse(IO.readln("Indtast medlemmets fødselsdato (YYYY-MM-DD): "));
+                    club.addMember(new MemberCompetitive(memberID, name, dateOfBirth));
+                    saveMembers();
                 }
             }
         } else {
             IO.println("Forkert brugernavn eller kodeord");
         }
 
+    }
+
+    public int getAvailableMemberID() {
+        int memberID = Integer.parseInt(IO.readln("Indtast medlemsnummer: "));
+        while (club.memberIdExists(memberID)) {
+            IO.println("Medlemsnummeret eksistere allerede, prøv igen.");
+            memberID = Integer.parseInt(IO.readln("Indtast medlemsnummer: "));
+        }
+        return memberID;
+    }
+
+    public void saveMembers() {
+        try {
+            saver.saveMembers(club.getMembers(), Path.of("data/members.csv"));
+            IO.println("Du har gemt medlemmet");
+        } catch (IOException e) {
+            IO.println("Der skete en fejl: " + e.getLocalizedMessage());
+        }
     }
 }
 
