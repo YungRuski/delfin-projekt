@@ -1,15 +1,13 @@
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 public class CompetitionResult {
-  private String disciplin;
+  private SwimDisciplin disciplin;
   private String competition;
   private int placement;
   private double time;
   private LocalDate date;
 
-  public CompetitionResult(String disciplin, String competition, int placement, double time, LocalDate date) {
+  public CompetitionResult(SwimDisciplin disciplin, String competition, int placement, double time, LocalDate date) {
     this.disciplin = disciplin;
     this.competition = competition;
     this.placement = placement;
@@ -17,7 +15,7 @@ public class CompetitionResult {
     this.date = date;
   }
 
-  public String getDisciplin() {
+  public SwimDisciplin getDisciplin() {
     return disciplin;
   }
 
@@ -31,5 +29,9 @@ public class CompetitionResult {
 
   public double getTime() {
     return time;
+  }
+
+  public LocalDate getDate(){
+    return date;
   }
 }
