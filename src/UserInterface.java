@@ -97,6 +97,15 @@ public class UserInterface {
             IO.println("Der skete en fejl: " + e.getLocalizedMessage());
         }
     }
+
+    public void saveCompetitionResults() {
+        try {
+            saver.saveCompetitionResults(club.getMembers(), Path.of("data/competitionResults.csv"));
+            IO.println("Du har gemt konkurrence resultaterne");
+        } catch (IOException e) {
+            IO.println("Der skete en fejl: " + e.getLocalizedMessage());
+        }
+    }
 }
 
 

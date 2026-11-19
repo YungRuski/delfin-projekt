@@ -16,6 +16,10 @@ public class MemberCompetitive extends Member {
         competitionResults.add(result);
     }
 
+    public List<CompetitionResult> getCompetitionResults() {
+        return competitionResults;
+    }
+
     @Override
     public String toString() {
         return super.toString() + "Medlemstype: Konkurrencesvømmer";
