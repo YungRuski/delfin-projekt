@@ -1,17 +1,17 @@
 import java.time.LocalDate;
 
 public class TrainingResult {
-  private String disciplin;
+  private SwimDisciplin disciplin;
   private double time;
   private LocalDate date;
 
-  public TrainingResult(String disciplin, double time, LocalDate date){
+  public TrainingResult(SwimDisciplin disciplin, double time, LocalDate date){
     this.disciplin = disciplin;
     this.time = time;
     this.date = date;
   }
 
-  public String getDisciplin() {
+  public SwimDisciplin getDisciplin() {
     return disciplin;
   }
 
