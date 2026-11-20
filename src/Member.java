@@ -73,4 +73,15 @@ public class Member {
   public void setPaid(boolean paid) {
     this.hasPaid = paid;
   }
+    @Override
+    public String toString() {
+        String status = memberStatus ? "Aktiv" : "Passiv";
+        return String.format("""
+                ID: %d
+                Navn: %s
+                Fødselsdato: %s
+                Medlemsstatus: %s
+                Medlemstype: Motionist
+                """, getMemberID(), getName(), getDateOfBirth(), status);
+    }
 }

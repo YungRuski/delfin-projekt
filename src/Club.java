@@ -4,7 +4,7 @@ import java.util.List;
 public class Club {
   private List<Member> members;
 
-  public Club() {
+  public Club(){
     this.members = new ArrayList<>();
   }
 
@@ -12,9 +12,22 @@ public class Club {
     return members;
   }
 
-  public void addMember(Member member) {
-    members.add(member);
-  }
+    public boolean addMember(Member member) {
+        if(memberIdExists(member.getMemberID())) {
+            return false;
+        }
+        members.add(member);
+        return true;
+    }
+
+    public boolean memberIdExists(int memberID) {
+        for (Member member : members) {
+            if (member.getMemberID() == memberID) {
+                return true;
+            }
+        }
+        return false;
+    }
 
   public double calculateExpectedFee() {
     double sum = 0;
@@ -40,6 +53,7 @@ public class Club {
     List<MemberCompetitive> result = new ArrayList<>();
     for (var member : members) {
       if (member instanceof MemberCompetitive competitive) {
+          result.add(competitive);
       }
     }
     return result;
