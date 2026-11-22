@@ -5,10 +5,12 @@ import java.time.LocalDate;
 public class UserInterface {
     private Club club;
     private ClubSaver saver;
+    private LoginManager loginManager;
 
-    public UserInterface(Club club, ClubSaver saver) {
+    public UserInterface(Club club, ClubSaver saver, LoginManager loginManager) {
         this.club = club;
         this.saver = saver;
+        this.loginManager = loginManager;
     }
 
     public void run() {
@@ -35,44 +37,16 @@ public class UserInterface {
     }
 
     public void chairmanLogin() {
-        String chairmanUsername = "ostemad";
-        String chairmanPassword = "ostemad123";
         IO.println("*******************");
         String username = IO.readln("Username: ");
         String password = IO.readln("Password: ");
-        if (username.equals(chairmanUsername) && password.equals(chairmanPassword)) {
+        if (loginManager.loginChairman(username, password)) {
             IO.println("1. Almindeligt medlem");
             IO.println("2. Konkurrencesvømmer");
             int choice = Integer.parseInt(IO.readln("Vælg medlems form: "));
             switch (choice) {
-                case 1 -> {
-                    int memberID = getAvailableMemberID();
-                    String name = IO.readln("Indtast navn på medlem: ");
-                    LocalDate dateOfBirth = LocalDate.parse(IO.readln("Indtast medlemmets fødselsdato (YYYY-MM-DD): "));
-
-                    int statusChoice = Integer.parseInt(IO.readln("""
-                            Vælg medlemsstatus:
-                            1. Aktiv
-                            2. Passiv \n"""));
-                    boolean isActive;
-                    while (statusChoice != 1 && statusChoice != 2) {
-                        statusChoice = Integer.parseInt(IO.readln("Tast gyldigt indput"));
-                    }
-                    if (statusChoice == 1) {
-                        isActive = true;
-                    } else {
-                        isActive = false;
-                    }
-                    club.addMember(new Member(memberID, name, dateOfBirth, isActive));
-                    saveMembers();
-                }
-                case 2 -> {
-                    int memberID = getAvailableMemberID();
-                    String name = IO.readln("Indtast navn på medlem: ");
-                    LocalDate dateOfBirth = LocalDate.parse(IO.readln("Indtast medlemmets fødselsdato (YYYY-MM-DD): "));
-                    club.addMember(new MemberCompetitive(memberID, name, dateOfBirth));
-                    saveMembers();
-                }
+                case 1 -> createRegularMember();
+                case 2 -> createCompetitionMember();
             }
         } else {
             IO.println("Forkert brugernavn eller kodeord");
@@ -105,6 +79,36 @@ public class UserInterface {
         } catch (IOException e) {
             IO.println("Der skete en fejl: " + e.getLocalizedMessage());
         }
+    }
+
+    public void createRegularMember() {
+        int memberID = getAvailableMemberID();
+        String name = IO.readln("Indtast navn på medlem: ");
+        LocalDate dateOfBirth = LocalDate.parse(IO.readln("Indtast medlemmets fødselsdato (YYYY-MM-DD): "));
+
+        int statusChoice = Integer.parseInt(IO.readln("""
+                Vælg medlemsstatus:
+                1. Aktiv
+                2. Passiv \n"""));
+        boolean isActive;
+        while (statusChoice != 1 && statusChoice != 2) {
+            statusChoice = Integer.parseInt(IO.readln("Tast gyldigt indput"));
+        }
+        if (statusChoice == 1) {
+            isActive = true;
+        } else {
+            isActive = false;
+        }
+        club.addMember(new Member(memberID, name, dateOfBirth, isActive));
+        saveMembers();
+    }
+
+    public void createCompetitionMember() {
+        int memberID = getAvailableMemberID();
+        String name = IO.readln("Indtast navn på medlem: ");
+        LocalDate dateOfBirth = LocalDate.parse(IO.readln("Indtast medlemmets fødselsdato (YYYY-MM-DD): "));
+        club.addMember(new MemberCompetitive(memberID, name, dateOfBirth));
+        saveMembers();
     }
 }
 
