@@ -24,17 +24,6 @@ public class Club{
     return sum;
   }
 
-  //Fjerner medlemmer gennem medlemsnummer
-  public boolean removeMemberByMemberID (int memberIdToRemove) {
-    for (Member member : members) {
-      if (member.getMemberID() == memberIdToRemove) {
-        members.remove(member);
-        return true;
-      }
-    }
-    return false;
-  }
-
   // Smider folk i listen hvis ikke de har betalt
   public List<Member> getMemberArrears() {
     List<Member> result = new ArrayList<>();
