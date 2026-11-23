@@ -1,7 +1,5 @@
 import org.junit.jupiter.api.Test;
-
 import java.time.LocalDate;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MemberCompetitiveTest {
@@ -45,6 +43,19 @@ public class MemberCompetitiveTest {
         //Assertion
         assertEquals(1, member.getTrainingResults().size());
         assertEquals(result, member.getTrainingResults().get(0));
+    }
 
+    @Test
+    public void addCompetitionResult() {
+        //Arrange
+        MemberCompetitive member = new MemberCompetitive(1, "Per", LocalDate.of(2010, 2, 25));
+        CompetitionResult result = new CompetitionResult(SwimDisciplin.CRAWL, "DM i Svømning",
+                                                        1, 30.5, LocalDate.of(2010, 2, 25));
+        //Act
+        member.addCompetitionResult(result);
+
+        //Assertion
+        assertEquals(1, member.getCompetitionResults().size());
+        assertEquals(result, member.getCompetitionResults().get(0));
     }
 }
