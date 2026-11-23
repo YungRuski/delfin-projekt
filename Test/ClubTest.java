@@ -122,7 +122,6 @@ public class ClubTest {
 
         //Assert
         assertTrue(club.getSeniorTeam().contains(member3));
-
     }
 
     @Test
