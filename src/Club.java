@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Club {
+public class Club{
   private List<Member> members;
 
   public Club() {
@@ -24,6 +24,17 @@ public class Club {
     return sum;
   }
 
+  //Fjerner medlemmer gennem medlemsnummer
+  public boolean removeMemberByMemberID (int memberIdToRemove) {
+    for (Member member : members) {
+      if (member.getMemberID() == memberIdToRemove) {
+        members.remove(member);
+        return true;
+      }
+    }
+    return false;
+  }
+
   // Smider folk i listen hvis ikke de har betalt
   public List<Member> getMemberArrears() {
     List<Member> result = new ArrayList<>();
@@ -40,6 +51,7 @@ public class Club {
     List<MemberCompetitive> result = new ArrayList<>();
     for (var member : members) {
       if (member instanceof MemberCompetitive competitive) {
+        result.add(competitive);
       }
     }
     return result;
