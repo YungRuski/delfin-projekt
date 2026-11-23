@@ -20,7 +20,14 @@ public class UserInterface {
             int choice = Integer.parseInt(IO.readln("Vælg et nummer fra menuen: "));
             switch (choice) {
                 case 1 -> chairmanLogin();
+                case 2 -> {
+                    IO.println("*******************");
+                    String username = IO.readln("Username: ");
+                    String password = IO.readln("Password: ");
+                    if (loginManager.loginTrainer(username, password)) {
 
+                    }
+                }
                 case 0 -> running = false;
             }
         }
@@ -43,10 +50,16 @@ public class UserInterface {
         if (loginManager.loginChairman(username, password)) {
             IO.println("1. Almindeligt medlem");
             IO.println("2. Konkurrencesvømmer");
+            IO.println("3. Fjern et medlem");
             int choice = Integer.parseInt(IO.readln("Vælg medlems form: "));
             switch (choice) {
                 case 1 -> createRegularMember();
                 case 2 -> createCompetitionMember();
+                case 3 -> {
+                    int memberID = Integer.parseInt(IO.readln("Tast ID'et på medlemmet der skal fjernes: "));
+                    club.removeMember(memberID);
+                    saveMembers();
+                }
             }
         } else {
             IO.println("Forkert brugernavn eller kodeord");
