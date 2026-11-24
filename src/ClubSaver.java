@@ -32,4 +32,16 @@ public class ClubSaver {
             }
         }
     }
+
+    public void saveTrainingResults(List<Member> members, Path path) throws IOException {
+        try (BufferedWriter writer = Files.newBufferedWriter(path)) {
+            for (Member member : members) {
+                if(member instanceof MemberCompetitive competitive) {
+                    for (TrainingResult result : competitive.getTrainingResults()) {
+                        writer.write(mapper.toCsv(result, competitive.getMemberID()));
+                    }
+                }
+            }
+        }
+    }
 }

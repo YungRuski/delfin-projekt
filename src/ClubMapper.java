@@ -31,4 +31,14 @@ public class ClubMapper {
                 delimiter + result.getPlacement() + delimiter + result.getTime() + delimiter +
                 result.getDate();
     }
+
+    public String fromCompetitionCsv(String line) {
+        String[] tokens = line.split(delimiter);
+
+    }
+
+    public String toCsv(TrainingResult result, int memberID) {
+        return memberID + delimiter + result.getDisciplin() + delimiter + result.getTime() +
+                delimiter + result.getDate();
+    }
 }

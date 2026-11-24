@@ -25,7 +25,7 @@ public class UserInterface {
                     String username = IO.readln("Username: ");
                     String password = IO.readln("Password: ");
                     if (loginManager.loginTrainer(username, password)) {
-
+                        IO.println("");
                     }
                 }
                 case 0 -> running = false;
