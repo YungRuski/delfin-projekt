@@ -39,6 +39,7 @@ public class ClubSaver {
                 if(member instanceof MemberCompetitive competitive) {
                     for (TrainingResult result : competitive.getTrainingResults()) {
                         writer.write(mapper.toCsv(result, competitive.getMemberID()));
+                        writer.write("\n");
                     }
                 }
             }
