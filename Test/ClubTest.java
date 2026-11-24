@@ -86,6 +86,25 @@ public class ClubTest {
     }
 
     @Test
+    public void testMemberWhenNoOnePaid() {
+        //Arrange
+        Club club = new Club();
+        Member member1 = new Member(1323, "Per", LocalDate.of(2010, 2, 25), true);
+        Member member2 = new Member(1223, "Jan", LocalDate.of(1960, 6, 4 ), true);
+
+        //Act
+        member1.setPaid(false);
+        member2.setPaid(false);
+        club.addMember(member1);
+        club.addMember(member2);
+
+        //Assert
+        assertTrue(club.getMemberArrears().contains(member1));
+        assertTrue(club.getMemberArrears().contains(member2));
+
+    }
+
+    @Test
     public void testMember18YearsIsNotJunior() {
         //Arrange
         Club club = new Club();
@@ -135,5 +154,20 @@ public class ClubTest {
 
         //Assert
         assertTrue(club.getJuniorTeam().contains(member1));
+    }
+
+    @Test
+    public void testAddMultipleCompetitiveMembers() {
+        //Arrange
+        Club club = new Club();
+        MemberCompetitive member1 = new MemberCompetitive(1, "Per", LocalDate.of(2010, 2, 25));
+        MemberCompetitive member2 = new MemberCompetitive(2, "Jan", LocalDate.of(2000, 6, 4));
+
+        //Act
+        club.addMember(member1);
+        club.addMember(member2);
+
+        //Assert
+        assertEquals(2, club.getMemberCompetitive().size());
     }
 }
