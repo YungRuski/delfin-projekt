@@ -55,11 +55,7 @@ public class UserInterface {
             switch (choice) {
                 case 1 -> createRegularMember();
                 case 2 -> createCompetitionMember();
-                case 3 -> {
-                    int memberID = Integer.parseInt(IO.readln("Tast ID'et på medlemmet der skal fjernes: "));
-                    club.removeMember(memberID);
-                    saveMembers();
-                }
+                case 3 -> removeMember();
             }
         } else {
             IO.println("Forkert brugernavn eller kodeord");
@@ -121,6 +117,12 @@ public class UserInterface {
         String name = IO.readln("Indtast navn på medlem: ");
         LocalDate dateOfBirth = LocalDate.parse(IO.readln("Indtast medlemmets fødselsdato (YYYY-MM-DD): "));
         club.addMember(new MemberCompetitive(memberID, name, dateOfBirth));
+        saveMembers();
+    }
+
+    public void removeMember()  {
+        int memberID = Integer.parseInt(IO.readln("Tast ID'et på medlemmet der skal fjernes: "));
+        club.removeMember(memberID);
         saveMembers();
     }
 }
