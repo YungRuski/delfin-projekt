@@ -149,20 +149,19 @@ public class UserInterface {
 
     public void createCompetitionResult() {
         int memberID = Integer.parseInt(IO.readln("Indtast medlemmets nummer: "));
-        for (Member member : club.getMembers()) {
-            if (member instanceof MemberCompetitive competitive && member.getMemberID() == memberID) {
-                SwimDisciplin selectedDisciplin = selectSwimDisciplin();
-                String competition = IO.readln("Indtast stævne: ");
-                int placement = Integer.parseInt(IO.readln("Indtast placering i konkurrencen: "));
-                double time = Double.parseDouble(IO.readln("Indtast gennemført tid(sekunder): "));
-                LocalDate date = LocalDate.parse(IO.readln("Indtast datoen for konkurrencen(YYYY-MM-DD): "));
-                CompetitionResult result = new CompetitionResult(selectedDisciplin, competition, placement, time, date);
-                competitive.addCompetitionResult(result);
-                saveCompetitionResults();
-                return;
-            }
+        MemberCompetitive competitive = club.findCompetitiveMember(memberID);
+        if (competitive != null) {
+            SwimDisciplin selectedDisciplin = selectSwimDisciplin();
+            String competition = IO.readln("Indtast stævne: ");
+            int placement = Integer.parseInt(IO.readln("Indtast placering i konkurrencen: "));
+            double time = Double.parseDouble(IO.readln("Indtast gennemført tid(sekunder): "));
+            LocalDate date = LocalDate.parse(IO.readln("Indtast datoen for konkurrencen(YYYY-MM-DD): "));
+            CompetitionResult result = new CompetitionResult(selectedDisciplin, competition, placement, time, date);
+            competitive.addCompetitionResult(result);
+            saveCompetitionResults();
+        } else {
+            IO.println("Ingen medlemmer med det medlemsnummer.");
         }
-        IO.println("Ingen konkurrencesvømmer fundet med dette medlemsnummer.");
     }
 }
 
