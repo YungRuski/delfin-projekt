@@ -11,7 +11,8 @@ public class ClubMapper {
             memberType = "REGULAR";
         }
         return member.getMemberID() + delimiter + member.getName() + delimiter +
-                member.getDateOfBirth() + delimiter + member.isActive() + delimiter + memberType;
+                member.getDateOfBirth() + delimiter + member.isActive() + delimiter +
+                memberType + delimiter + member.hasPaid();
     }
 
     public Member fromMemberCsv(String line) {
@@ -19,11 +20,15 @@ public class ClubMapper {
         int memberID = Integer.parseInt(tokens[0]);
         LocalDate dateOfBirth = LocalDate.parse(tokens[2]);
         boolean isActive = Boolean.parseBoolean(tokens[3]);
+        boolean hasPaid = Boolean.parseBoolean(tokens[5]);
+        Member member;
         if (tokens[4].equals("REGULAR")) {
-            return new Member(memberID, tokens[1], dateOfBirth, isActive);
+            member = new Member(memberID, tokens[1], dateOfBirth, isActive);
         } else {
-            return new MemberCompetitive(memberID, tokens[1], dateOfBirth);
+            member = new MemberCompetitive(memberID, tokens[1], dateOfBirth);
         }
+        member.setPaid(hasPaid);
+        return member;
     }
 
     public String toCsv(CompetitionResult result, int memberID) {

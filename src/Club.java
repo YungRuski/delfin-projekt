@@ -37,17 +37,6 @@ public class Club {
     return sum;
   }
 
-  // Smider folk i listen hvis ikke de har betalt
-  public List<Member> getMemberArrears() {
-    List<Member> result = new ArrayList<>();
-    for (var member : members) {
-      if (!member.hasPaid()) {
-        result.add(member);
-      }
-    }
-    return result;
-  }
-
   // Finder konkurrencesvømmere
   public List<MemberCompetitive> getMemberCompetitive() {
     List<MemberCompetitive> result = new ArrayList<>();
@@ -74,6 +63,26 @@ public class Club {
     for (var swimmer : getMemberCompetitive()){
       if (swimmer.isSenior()){
         result.add(swimmer);
+      }
+    }
+    return result;
+  }
+
+  public List<Member> getPaidMembers(){
+    List<Member> result = new ArrayList<>();
+    for (var member : getMembers()){
+      if (member.hasPaid()){
+        result.add(member);
+      }
+    }
+    return result;
+  }
+
+  public List<Member> getUnpaidMembers(){
+    List<Member> result = new ArrayList<>();
+    for (var member : getMembers()){
+      if (!member.hasPaid()){
+        result.add(member);
       }
     }
     return result;
