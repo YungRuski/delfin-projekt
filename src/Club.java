@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Club {
-    private List<Member> members;
+public class Club{
+  private List<Member> members;
 
     public Club() {
         this.members = new ArrayList<>();
