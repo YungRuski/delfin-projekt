@@ -1,23 +1,34 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Club {
+public class Club{
   private List<Member> members;
 
-  public Club(){
-    this.members = new ArrayList<>();
-  }
+    public Club() {
+        this.members = new ArrayList<>();
+    }
 
-  public List<Member> getMembers() {
-    return members;
-  }
+    public List<Member> getMembers() {
+        return members;
+    }
 
     public boolean addMember(Member member) {
-        if(memberIdExists(member.getMemberID())) {
+        if (memberIdExists(member.getMemberID())) {
             return false;
         }
         members.add(member);
         return true;
+    }
+
+    //Eventuelt refactor med en metode som finder et member objekt.
+    public boolean removeMember(int memberID) {
+        for (Member member : members) {
+            if (member.getMemberID() == memberID) {
+                members.remove(member);
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean memberIdExists(int memberID) {
@@ -29,13 +40,13 @@ public class Club {
         return false;
     }
 
-  public double calculateExpectedFee() {
-    double sum = 0;
-    for (var member : members) {
-      sum += member.calculateFee();
+    public double calculateExpectedFee() {
+        double sum = 0;
+        for (var member : members) {
+            sum += member.calculateFee();
+        }
+        return sum;
     }
-    return sum;
-  }
 
   // Finder konkurrencesvømmere
   public List<MemberCompetitive> getMemberCompetitive() {
@@ -45,46 +56,33 @@ public class Club {
           result.add(competitive);
       }
     }
-    return result;
-  }
 
-  public List<MemberCompetitive> getJuniorTeam() {
-    List<MemberCompetitive> result = new ArrayList<>();
-    for (var swimmer : getMemberCompetitive()){
-      if(swimmer.isJunior()){
-        result.add(swimmer);
-      }
+    public List<MemberCompetitive> getJuniorTeam() {
+        List<MemberCompetitive> result = new ArrayList<>();
+        for (var swimmer : getMemberCompetitive()) {
+            if (swimmer.isJunior()) {
+                result.add(swimmer);
+            }
+        }
+        return result;
     }
-    return result;
-  }
 
-  public List<MemberCompetitive> getSeniorTeam(){
-    List<MemberCompetitive> result = new ArrayList<>();
-    for (var swimmer : getMemberCompetitive()){
-      if (swimmer.isSenior()){
-        result.add(swimmer);
-      }
+    public List<MemberCompetitive> getSeniorTeam() {
+        List<MemberCompetitive> result = new ArrayList<>();
+        for (var swimmer : getMemberCompetitive()) {
+            if (swimmer.isSenior()) {
+                result.add(swimmer);
+            }
+        }
+        return result;
     }
-    return result;
-  }
 
-  public List<Member> getPaidMembers(){
-    List<Member> result = new ArrayList<>();
-    for (var member : getMembers()){
-      if (member.hasPaid()){
-        result.add(member);
-      }
+    public MemberCompetitive findCompetitiveMember(int memberID) {
+        for (MemberCompetitive competitive : getMemberCompetitive()) {
+            if (competitive.getMemberID() == memberID) {
+                return competitive;
+            }
+        }
+        return null;
     }
-    return result;
-  }
-
-  public List<Member> getUnpaidMembers(){
-    List<Member> result = new ArrayList<>();
-    for (var member : getMembers()){
-      if (!member.hasPaid()){
-        result.add(member);
-      }
-    }
-    return result;
-  }
 }

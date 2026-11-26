@@ -36,4 +36,18 @@ public class ClubMapper {
                 delimiter + result.getPlacement() + delimiter + result.getTime() + delimiter +
                 result.getDate();
     }
+
+    public CompetitionResult fromCompetitionCsv(String line) {
+        String[] tokens = line.split(delimiter);
+        SwimDisciplin disciplin = SwimDisciplin.valueOf(tokens[1]);
+        int placement = Integer.parseInt(tokens[3]);
+        double time = Double.parseDouble(tokens[4]);
+        LocalDate date = LocalDate.parse(tokens[5]);
+        return new CompetitionResult(disciplin, tokens[2], placement, time, date);
+    }
+
+    public String toCsv(TrainingResult result, int memberID) {
+        return memberID + delimiter + result.getDisciplin() + delimiter + result.getTime() +
+                delimiter + result.getDate();
+    }
 }
