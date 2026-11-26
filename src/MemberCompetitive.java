@@ -1,8 +1,9 @@
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MemberCompetitive extends Member {
+public class MemberCompetitive extends Member{
 
   private List<CompetitionResult> competitionResults;
   private List<TrainingResult> trainingResults;
@@ -40,4 +41,8 @@ public class MemberCompetitive extends Member {
   public List<SwimDisciplin> getDisciplins() {
     return disciplins;
   }
+    @Override
+    public String toString() {
+        return super.toString().replace("Motionist", "Konkurrencesvømmer");
+    }
 }
