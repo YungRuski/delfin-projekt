@@ -11,6 +11,7 @@ void main() {
         for (Member member : loadedMembers) {
             club.addMember(member);
         }
+        loader.loadCompetitionResults(Path.of("data/competitionResults.csv"), club);
     } catch (IOException e) {
         IO.println("Der skete en fejl: " + e.getLocalizedMessage());
     }

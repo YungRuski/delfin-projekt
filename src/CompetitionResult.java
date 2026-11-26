@@ -34,4 +34,15 @@ public class CompetitionResult {
   public LocalDate getDate(){
     return date;
   }
+
+  @Override
+  public String toString() {
+    return String.format("""
+            Disciplin: %s
+            Stævne: %s
+            Placering: %d
+            Tid: %.2f sekunder
+            Dato: %s
+            """, getDisciplin(), getCompetition(), getPlacement(), getTime(), getDate());
+  }
 }

@@ -12,7 +12,7 @@ public class ClubLoader {
         this.mapper = mapper;
     }
 
-    public List<Member> loadMembers (Path path) throws IOException {
+    public List<Member> loadMembers(Path path) throws IOException {
         List<Member> members = new ArrayList<>();
         try (BufferedReader reader = Files.newBufferedReader(path)) {
             String line;
@@ -21,5 +21,21 @@ public class ClubLoader {
             }
         }
         return members;
+    }
+
+    public void loadCompetitionResults(Path path, Club club) throws IOException {
+        try (BufferedReader reader = Files.newBufferedReader(path)) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] tokens = line.split(",");
+                int memberID = Integer.parseInt(tokens[0]);
+                for (Member member : club.getMembers()) {
+                    if(member instanceof MemberCompetitive competitive && member.getMemberID() == memberID) {
+                        CompetitionResult result = mapper.fromCompetitionCsv(line);
+                        competitive.addCompetitionResult(result);
+                    }
+                }
+            }
+        }
     }
 }

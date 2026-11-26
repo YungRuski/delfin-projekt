@@ -89,4 +89,13 @@ public class Club{
         }
         return result;
     }
+
+    public MemberCompetitive findCompetitiveMember(int memberID) {
+        for (MemberCompetitive competitive : getMemberCompetitive()) {
+            if (competitive.getMemberID() == memberID) {
+                return competitive;
+            }
+        }
+        return null;
+    }
 }

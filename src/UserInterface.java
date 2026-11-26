@@ -20,14 +20,7 @@ public class UserInterface {
             int choice = Integer.parseInt(IO.readln("Vælg et nummer fra menuen: "));
             switch (choice) {
                 case 1 -> chairmanLogin();
-                case 2 -> {
-                    IO.println("*******************");
-                    String username = IO.readln("Username: ");
-                    String password = IO.readln("Password: ");
-                    if (loginManager.loginTrainer(username, password)) {
-
-                    }
-                }
+                case 2 -> trainerLogin();
                 case 0 -> running = false;
             }
         }
@@ -120,10 +113,55 @@ public class UserInterface {
         saveMembers();
     }
 
-    public void removeMember()  {
+    public void removeMember() {
         int memberID = Integer.parseInt(IO.readln("Tast ID'et på medlemmet der skal fjernes: "));
         club.removeMember(memberID);
         saveMembers();
+    }
+
+    public void trainerLogin() {
+        IO.println("*******************");
+        String username = IO.readln("Username: ");
+        String password = IO.readln("Password: ");
+        if (loginManager.loginTrainer(username, password)) {
+            IO.println("1. Tilføj konkurrence resultat");
+            IO.println("2. Tilføj trænings resultat");
+            int choice = Integer.parseInt(IO.readln("Vælg 1 eller 2: "));
+            switch (choice) {
+                case 1 -> createCompetitionResult();
+            }
+        } else {
+            IO.println("Forkert brugernavn eller kodeord");
+        }
+    }
+
+    public SwimDisciplin selectSwimDisciplin() {
+        SwimDisciplin[] disciplinList = SwimDisciplin.values();
+        for (int i = 0; i < disciplinList.length; i++) {
+            IO.println((i + 1) + ": " + disciplinList[i]);
+        }
+        int disciplinChoice = Integer.parseInt(IO.readln("Vælg en disciplin: "));
+        while (disciplinChoice < 1 || disciplinChoice > disciplinList.length) {
+            disciplinChoice = Integer.parseInt(IO.readln("Indtast gyldigt tal fra menuen: "));
+        }
+        return disciplinList[disciplinChoice - 1];
+    }
+
+    public void createCompetitionResult() {
+        int memberID = Integer.parseInt(IO.readln("Indtast medlemmets nummer: "));
+        MemberCompetitive competitive = club.findCompetitiveMember(memberID);
+        if (competitive != null) {
+            SwimDisciplin selectedDisciplin = selectSwimDisciplin();
+            String competition = IO.readln("Indtast stævne: ");
+            int placement = Integer.parseInt(IO.readln("Indtast placering i konkurrencen: "));
+            double time = Double.parseDouble(IO.readln("Indtast gennemført tid(sekunder): "));
+            LocalDate date = LocalDate.parse(IO.readln("Indtast datoen for konkurrencen(YYYY-MM-DD): "));
+            CompetitionResult result = new CompetitionResult(selectedDisciplin, competition, placement, time, date);
+            competitive.addCompetitionResult(result);
+            saveCompetitionResults();
+        } else {
+            IO.println("Ingen medlemmer med det medlemsnummer.");
+        }
     }
 }
 

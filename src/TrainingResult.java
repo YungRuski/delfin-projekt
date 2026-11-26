@@ -22,4 +22,13 @@ public class TrainingResult {
   public LocalDate getDate() {
     return date;
   }
+
+  @Override
+  public String toString() {
+    return String.format("""
+            Disciplin: %s
+            Tid: %.2f sekunder
+            Dato: %s
+            """, getDisciplin(), getTime(), getDate());
+  }
 }
