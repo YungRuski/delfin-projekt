@@ -67,7 +67,7 @@ public class ClubTest {
         club.addMember(member2);
 
         //Assert
-        assertTrue(club.getMemberArrears().isEmpty());
+        assertTrue(club.getUnpaidMembers().isEmpty());
     }
 
     @Test
@@ -82,7 +82,7 @@ public class ClubTest {
         club.addMember(member1);
         club.addMember(member2);
 
-        assertFalse(club.getMemberArrears().isEmpty());
+        assertFalse(club.getUnpaidMembers().isEmpty());
     }
 
     @Test
@@ -99,8 +99,8 @@ public class ClubTest {
         club.addMember(member2);
 
         //Assert
-        assertTrue(club.getMemberArrears().contains(member1));
-        assertTrue(club.getMemberArrears().contains(member2));
+        assertTrue(club.getUnpaidMembers().contains(member1));
+        assertTrue(club.getUnpaidMembers().contains(member2));
 
     }
 

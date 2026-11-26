@@ -53,9 +53,11 @@ public class Club{
     List<MemberCompetitive> result = new ArrayList<>();
     for (var member : members) {
       if (member instanceof MemberCompetitive competitive) {
-          result.add(competitive);
+        result.add(competitive);
       }
     }
+    return result;
+  }
 
     public List<MemberCompetitive> getJuniorTeam() {
         List<MemberCompetitive> result = new ArrayList<>();
@@ -84,5 +86,25 @@ public class Club{
             }
         }
         return null;
+    }
+
+    public List<Member> getPaidMembers(){
+      List<Member> result = new ArrayList<>();
+      for (var member : members){
+        if(member.hasPaid()){
+          result.add(member);
+        }
+      }
+      return result;
+    }
+
+    public List<Member> getUnpaidMembers(){
+      List<Member> result = new ArrayList<>();
+      for (var member : members){
+        if(!member.hasPaid()){
+          result.add(member);
+        }
+      }
+      return result;
     }
 }

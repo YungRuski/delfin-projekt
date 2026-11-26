@@ -6,10 +6,12 @@ import java.util.List;
 public class UserInterface {
   private Club club;
   private ClubSaver saver;
+  private LoginManager loginManager;
 
-  public UserInterface(Club club, ClubSaver saver) {
+  public UserInterface(Club club, ClubSaver saver, LoginManager loginManager) {
     this.club = club;
     this.saver = saver;
+    this.loginManager = loginManager;
   }
 
   public void run() {
@@ -17,21 +19,14 @@ public class UserInterface {
     while (running) {
       showMenu();
       int choice = Integer.parseInt(IO.readln("Vælg et nummer fra menuen: "));
+
       switch (choice) {
         case 1 -> chairmanLogin();
-
-        case 3 -> KassererLogin();
+        case 2 -> trainerLogin();
+        case 3 -> kassererLogin();
         case 0 -> running = false;
         default -> IO.println("Ugyldigt valg. Indtast rigtig mulighed");
       }
-    private Club club;
-    private ClubSaver saver;
-    private LoginManager loginManager;
-
-    public UserInterface(Club club, ClubSaver saver, LoginManager loginManager) {
-        this.club = club;
-        this.saver = saver;
-        this.loginManager = loginManager;
     }
   }
 
@@ -46,70 +41,29 @@ public class UserInterface {
   }
 
   public void chairmanLogin() {
-    String chairmanUsername = "ostemad";
-    String chairmanPassword = "ostemad123";
     IO.println("*******************");
     String username = IO.readln("Username: ");
     String password = IO.readln("Password: ");
-    if (username.equals(chairmanUsername) && password.equals(chairmanPassword)) {
+    if (loginManager.loginChairman(username, password)) {
       IO.println("1. Almindeligt medlem");
       IO.println("2. Konkurrencesvømmer");
+      IO.println("3. Fjern et medlem");
       int choice = Integer.parseInt(IO.readln("Vælg medlems form: "));
       switch (choice) {
-        case 1 -> {
-          int memberID = getAvailableMemberID();
-          String name = IO.readln("Indtast navn på medlem: ");
-          LocalDate dateOfBirth = LocalDate.parse(IO.readln("Indtast medlemmets fødselsdato (YYYY-MM-DD): "));
-
-          int statusChoice = Integer.parseInt(IO.readln("""
-                  Vælg medlemsstatus:
-                  1. Aktiv
-                  2. Passiv \n"""));
-          boolean isActive;
-          while (statusChoice != 1 && statusChoice != 2) {
-            statusChoice = Integer.parseInt(IO.readln("Tast gyldigt indput"));
-          }
-          if (statusChoice == 1) {
-            isActive = true;
-          } else {
-            isActive = false;
-          }
-          club.addMember(new Member(memberID, name, dateOfBirth, isActive));
-          saveMembers();
-        }
-        case 2 -> {
-          int memberID = getAvailableMemberID();
-          String name = IO.readln("Indtast navn på medlem: ");
-          LocalDate dateOfBirth = LocalDate.parse(IO.readln("Indtast medlemmets fødselsdato (YYYY-MM-DD): "));
-          club.addMember(new MemberCompetitive(memberID, name, dateOfBirth));
-          saveMembers();
-    public void run() {
-        boolean running = true;
-        while (running) {
-            showMenu();
-            int choice = Integer.parseInt(IO.readln("Vælg et nummer fra menuen: "));
-            switch (choice) {
-                case 1 -> chairmanLogin();
-                case 2 -> trainerLogin();
-                case 0 -> running = false;
-            }
-        }
+        case 1 -> createRegularMember();
+        case 2 -> createCompetitionMember();
+        case 3 -> removeMember();
       }
     } else {
       IO.println("Forkert brugernavn eller kodeord");
     }
   }
 
-  public void KassererLogin() {
-    String kassererUserName = "Banan";
-    String KassererPassWord = "Banan123";
-
-    IO.println("*******************");
-
-    String username = IO.readln("Username: ");
-    String password = IO.readln("Password: ");
-
-    if (username.equals(kassererUserName) && password.equals(KassererPassWord)) {
+public void kassererLogin() {
+  IO.println("*******************");
+  String username = IO.readln("Username: ");
+  String password = IO.readln("Password: ");
+  if (loginManager.loginKasserer(username, password)) {
       IO.println("1. Betalte medlemmer");
       IO.println("2. Medlemmer i restance");
       IO.println("3. Forventet kontigent");
@@ -127,33 +81,16 @@ public class UserInterface {
     }
   }
 
-  public int getAvailableMemberID() {
-    int memberID = Integer.parseInt(IO.readln("Indtast medlemsnummer: "));
-    while (club.memberIdExists(memberID)) {
-      IO.println("Medlemsnummeret eksistere allerede, prøv igen.");
-      memberID = Integer.parseInt(IO.readln("Indtast medlemsnummer: "));
-    }
-    return memberID;
+public int getAvailableMemberID() {
+  int memberID = Integer.parseInt(IO.readln("Indtast medlemsnummer: "));
+  while (club.memberIdExists(memberID)) {
+    IO.println("Medlemsnummeret eksistere allerede, prøv igen.");
+    memberID = Integer.parseInt(IO.readln("Indtast medlemsnummer: "));
   }
-    public void chairmanLogin() {
-        IO.println("*******************");
-        String username = IO.readln("Username: ");
-        String password = IO.readln("Password: ");
-        if (loginManager.loginChairman(username, password)) {
-            IO.println("1. Almindeligt medlem");
-            IO.println("2. Konkurrencesvømmer");
-            IO.println("3. Fjern et medlem");
-            int choice = Integer.parseInt(IO.readln("Vælg medlems form: "));
-            switch (choice) {
-                case 1 -> createRegularMember();
-                case 2 -> createCompetitionMember();
-                case 3 -> removeMember();
-            }
-        } else {
-            IO.println("Forkert brugernavn eller kodeord");
-        }
+  return memberID;
+}
 
-  public void saveMembers() {
+  public void saveMembers () {
     try {
       saver.saveMembers(club.getMembers(), Path.of("data/members.csv"));
       IO.println("Du har gemt medlemmet");
@@ -162,7 +99,7 @@ public class UserInterface {
     }
   }
 
-  public void saveCompetitionResults() {
+  public void saveCompetitionResults () {
     try {
       saver.saveCompetitionResults(club.getMembers(), Path.of("data/competitionResults.csv"));
       IO.println("Du har gemt konkurrence resultaterne");
@@ -171,40 +108,40 @@ public class UserInterface {
     }
   }
 // "return;" Stopper metoden hvis ikke der er noget opfyldt
- public void showPaidMembers(){
-   List<Member> paidMembers = club.getPaidMembers();
+  public void showPaidMembers () {
+    List<Member> paidMembers = club.getPaidMembers();
 
-   if(paidMembers.isEmpty()){
-     IO.println("Ingen medlemmer har betalt");
-     return;
-   }
-   IO.println("Betalte medlemmer");
-   for (var member : paidMembers){
-     IO.println(member.getName());
-   }
- }
+    if (paidMembers.isEmpty()) {
+      IO.println("Ingen medlemmer har betalt");
+      return;
+    }
+    IO.println("Betalte medlemmer");
+    for (var member : paidMembers) {
+      IO.println(member.getName());
+    }
+  }
 
- public void showUnPaidMembers(){
+  public void showUnPaidMembers () {
     List<Member> unpaidMembers = club.getUnpaidMembers();
 
-    if(unpaidMembers.isEmpty()){
+    if (unpaidMembers.isEmpty()) {
       IO.println("Alle medlemmer har betalt");
       return;
     }
     IO.println("Members i restance");
-    for (var member : unpaidMembers){
+    for (var member : unpaidMembers) {
       IO.println(member.getName());
     }
- }
+  }
 
- public void showExpectedFee(){
+  public void showExpectedFee () {
     IO.println("Forventet kontigent: " + club.calculateExpectedFee() + "kr. ");
- }
+  }
 
- public void registerPayment(){
+  public void registerPayment () {
     int memberID = Integer.parseInt(IO.readln("Indtast medlemsnummer: "));
-    for (var member : club.getMembers()){
-      if (member.getMemberID() == memberID){
+    for (var member : club.getMembers()) {
+      if (member.getMemberID() == memberID) {
         member.setPaid(true);
         saveMembers();
         IO.println(member.getName() + " har betalt");
@@ -212,88 +149,88 @@ public class UserInterface {
       }
     }
     IO.println("Medlemmet findes ikke");
- }
+  }
 
-    public void createRegularMember() {
-        int memberID = getAvailableMemberID();
-        String name = IO.readln("Indtast navn på medlem: ");
-        LocalDate dateOfBirth = LocalDate.parse(IO.readln("Indtast medlemmets fødselsdato (YYYY-MM-DD): "));
+  public void createRegularMember () {
+    int memberID = getAvailableMemberID();
+    String name = IO.readln("Indtast navn på medlem: ");
+    LocalDate dateOfBirth = LocalDate.parse(IO.readln("Indtast medlemmets fødselsdato (YYYY-MM-DD): "));
 
-        int statusChoice = Integer.parseInt(IO.readln("""
-                Vælg medlemsstatus:
-                1. Aktiv
-                2. Passiv \n"""));
-        boolean isActive;
-        while (statusChoice != 1 && statusChoice != 2) {
-            statusChoice = Integer.parseInt(IO.readln("Tast gyldigt indput"));
-        }
-        if (statusChoice == 1) {
-            isActive = true;
-        } else {
-            isActive = false;
-        }
-        club.addMember(new Member(memberID, name, dateOfBirth, isActive));
-        saveMembers();
+    int statusChoice = Integer.parseInt(IO.readln("""
+            Vælg medlemsstatus:
+            1. Aktiv
+            2. Passiv \n"""));
+    boolean isActive;
+    while (statusChoice != 1 && statusChoice != 2) {
+      statusChoice = Integer.parseInt(IO.readln("Tast gyldigt indput"));
     }
-
-    public void createCompetitionMember() {
-        int memberID = getAvailableMemberID();
-        String name = IO.readln("Indtast navn på medlem: ");
-        LocalDate dateOfBirth = LocalDate.parse(IO.readln("Indtast medlemmets fødselsdato (YYYY-MM-DD): "));
-        club.addMember(new MemberCompetitive(memberID, name, dateOfBirth));
-        saveMembers();
+    if (statusChoice == 1) {
+      isActive = true;
+    } else {
+      isActive = false;
     }
+    club.addMember(new Member(memberID, name, dateOfBirth, isActive));
+    saveMembers();
+  }
 
-    public void removeMember() {
-        int memberID = Integer.parseInt(IO.readln("Tast ID'et på medlemmet der skal fjernes: "));
-        club.removeMember(memberID);
-        saveMembers();
-    }
+  public void createCompetitionMember () {
+    int memberID = getAvailableMemberID();
+    String name = IO.readln("Indtast navn på medlem: ");
+    LocalDate dateOfBirth = LocalDate.parse(IO.readln("Indtast medlemmets fødselsdato (YYYY-MM-DD): "));
+    club.addMember(new MemberCompetitive(memberID, name, dateOfBirth));
+    saveMembers();
+  }
 
-    public void trainerLogin() {
-        IO.println("*******************");
-        String username = IO.readln("Username: ");
-        String password = IO.readln("Password: ");
-        if (loginManager.loginTrainer(username, password)) {
-            IO.println("1. Tilføj konkurrence resultat");
-            IO.println("2. Tilføj trænings resultat");
-            int choice = Integer.parseInt(IO.readln("Vælg 1 eller 2: "));
-            switch (choice) {
-                case 1 -> createCompetitionResult();
-            }
-        } else {
-            IO.println("Forkert brugernavn eller kodeord");
-        }
-    }
+  public void removeMember () {
+    int memberID = Integer.parseInt(IO.readln("Tast ID'et på medlemmet der skal fjernes: "));
+    club.removeMember(memberID);
+    saveMembers();
+  }
 
-    public SwimDisciplin selectSwimDisciplin() {
-        SwimDisciplin[] disciplinList = SwimDisciplin.values();
-        for (int i = 0; i < disciplinList.length; i++) {
-            IO.println((i + 1) + ": " + disciplinList[i]);
-        }
-        int disciplinChoice = Integer.parseInt(IO.readln("Vælg en disciplin: "));
-        while (disciplinChoice < 1 || disciplinChoice > disciplinList.length) {
-            disciplinChoice = Integer.parseInt(IO.readln("Indtast gyldigt tal fra menuen: "));
-        }
-        return disciplinList[disciplinChoice - 1];
+  public void trainerLogin () {
+    IO.println("*******************");
+    String username = IO.readln("Username: ");
+    String password = IO.readln("Password: ");
+    if (loginManager.loginTrainer(username, password)) {
+      IO.println("1. Tilføj konkurrence resultat");
+      IO.println("2. Tilføj trænings resultat");
+      int choice = Integer.parseInt(IO.readln("Vælg 1 eller 2: "));
+      switch (choice) {
+        case 1 -> createCompetitionResult();
+      }
+    } else {
+      IO.println("Forkert brugernavn eller kodeord");
     }
+  }
 
-    public void createCompetitionResult() {
-        int memberID = Integer.parseInt(IO.readln("Indtast medlemmets nummer: "));
-        MemberCompetitive competitive = club.findCompetitiveMember(memberID);
-        if (competitive != null) {
-            SwimDisciplin selectedDisciplin = selectSwimDisciplin();
-            String competition = IO.readln("Indtast stævne: ");
-            int placement = Integer.parseInt(IO.readln("Indtast placering i konkurrencen: "));
-            double time = Double.parseDouble(IO.readln("Indtast gennemført tid(sekunder): "));
-            LocalDate date = LocalDate.parse(IO.readln("Indtast datoen for konkurrencen(YYYY-MM-DD): "));
-            CompetitionResult result = new CompetitionResult(selectedDisciplin, competition, placement, time, date);
-            competitive.addCompetitionResult(result);
-            saveCompetitionResults();
-        } else {
-            IO.println("Ingen medlemmer med det medlemsnummer.");
-        }
+  public SwimDisciplin selectSwimDisciplin () {
+    SwimDisciplin[] disciplinList = SwimDisciplin.values();
+    for (int i = 0; i < disciplinList.length; i++) {
+      IO.println((i + 1) + ": " + disciplinList[i]);
     }
+    int disciplinChoice = Integer.parseInt(IO.readln("Vælg en disciplin: "));
+    while (disciplinChoice < 1 || disciplinChoice > disciplinList.length) {
+      disciplinChoice = Integer.parseInt(IO.readln("Indtast gyldigt tal fra menuen: "));
+    }
+    return disciplinList[disciplinChoice - 1];
+  }
+
+  public void createCompetitionResult () {
+    int memberID = Integer.parseInt(IO.readln("Indtast medlemmets nummer: "));
+    MemberCompetitive competitive = club.findCompetitiveMember(memberID);
+    if (competitive != null) {
+      SwimDisciplin selectedDisciplin = selectSwimDisciplin();
+      String competition = IO.readln("Indtast stævne: ");
+      int placement = Integer.parseInt(IO.readln("Indtast placering i konkurrencen: "));
+      double time = Double.parseDouble(IO.readln("Indtast gennemført tid(sekunder): "));
+      LocalDate date = LocalDate.parse(IO.readln("Indtast datoen for konkurrencen(YYYY-MM-DD): "));
+      CompetitionResult result = new CompetitionResult(selectedDisciplin, competition, placement, time, date);
+      competitive.addCompetitionResult(result);
+      saveCompetitionResults();
+    } else {
+      IO.println("Ingen medlemmer med det medlemsnummer.");
+    }
+  }
 }
 
 
