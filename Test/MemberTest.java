@@ -65,11 +65,103 @@ public class MemberTest {
     double junior = member1.calculateFee();
     double senior = member3.calculateFee();
     double over60 = member2.calculateFee();
-    double paasive = member4.calculateFee();
+    double passive = member4.calculateFee();
     // Assert
     assertEquals(1000.0, junior);
     assertEquals(1600.0, senior);
     assertEquals(1200.0, over60);
-    assertEquals(500.0, paasive);
+    assertEquals(500.0, passive);
+  }
+
+  @Test
+  public void testIsJunior() {
+    // Arrange
+    Member member1 = new Member(1323, "Per", LocalDate.now().minusYears(16), true);
+    // Act
+    boolean junior = member1.isJunior();
+    // Assert
+    assertTrue(junior);
+  }
+
+  @Test
+  public void testIsNotJunior() {
+    // Arrange
+    Member member1 = new Member(1323, "Per", LocalDate.now().minusYears(18), true);
+    // Act
+    boolean junior = member1.isJunior();
+    // Assert
+    assertFalse(junior);
+  }
+
+  @Test
+  public void testIsSenior() {
+    // Arrange
+    Member member3 = new Member(1123, "Tom", LocalDate.now().minusYears(18), true);
+    // Act
+    boolean senior = member3.isSenior();
+    // Assert
+    assertTrue(senior);
+  }
+
+  @Test
+  public void testIsNotSenior() {
+    // Arrange
+    Member member3 = new Member(1123, "Tom", LocalDate.now().minusYears(17), true);
+    // Act
+    boolean senior = member3.isSenior();
+    // Assert
+    assertFalse(senior);
+  }
+
+  @Test
+  public void testIsOver60() {
+    // Arrange
+    Member member2 = new Member(1223, "Jan", LocalDate.now().minusYears(60), true);
+    // Act
+    boolean over60 = member2.isOver60();
+    // Assert
+    assertTrue(over60);
+  }
+
+  @Test
+  public void testIsNotOver60() {
+    // Arrange
+    Member member2 = new Member(1223, "Jan", LocalDate.now().minusYears(59), true);
+    // Act
+    boolean over60 = member2.isOver60();
+    // Assert
+    assertFalse(over60);
+  }
+
+  @Test
+  public void testSetActive() {
+    // Arrange
+    Member member1 = new Member(1323, "Per", LocalDate.of(2010, 2, 25), true);
+    // Act
+    member1.setActive(true);
+    boolean memerStatus = member1.isActive();
+    // Assert
+    assertTrue(memerStatus);
+  }
+
+  @Test
+  public void testHasNotPaid() {
+    // Arrange
+    Member member1 = new Member(1323, "Per", LocalDate.of(2010, 2, 25), true);
+    // Act
+    boolean paid = member1.hasPaid();
+    // Assert
+    assertFalse(paid);
+  }
+
+  @Test
+  public void testHasPaid() {
+    // Arrange
+    Member member1 = new Member(1323, "Per", LocalDate.of(2010, 2, 25), true);
+    member1.setPaid(true);
+    // Act
+    boolean paid = member1.hasPaid();
+    // Assert
+    assertTrue(paid);
   }
 }

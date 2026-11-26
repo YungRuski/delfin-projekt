@@ -36,7 +36,7 @@ public class Member {
     return memberStatus;
   }
 
-  public void setActive(boolean active){
+  public void setActive(boolean active) {
     this.memberStatus = active;
   }
 
@@ -69,19 +69,21 @@ public class Member {
   public boolean hasPaid() {
     return hasPaid;
   }
-// En setter til betaling status
+
+  // En setter til betaling status
   public void setPaid(boolean paid) {
     this.hasPaid = paid;
   }
-    @Override
-    public String toString() {
-        String status = memberStatus ? "Aktiv" : "Passiv";
-        return String.format("""
-                ID: %d
-                Navn: %s
-                Fødselsdato: %s
-                Medlemsstatus: %s
-                Medlemstype: Motionist
-                """, getMemberID(), getName(), getDateOfBirth(), status);
-    }
+
+  @Override
+  public String toString() {
+    String status = memberStatus ? "Aktiv" : "Passiv";
+    return String.format("""
+            ID: %d
+            Navn: %s
+            Fødselsdato: %s
+            Medlemsstatus: %s
+            Medlemstype: Motionist
+            """, getMemberID(), getName(), getDateOfBirth(), status);
+  }
 }
