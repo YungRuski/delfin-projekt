@@ -12,6 +12,7 @@ void main() {
             club.addMember(member);
         }
         loader.loadCompetitionResults(Path.of("data/competitionResults.csv"), club);
+        loader.loadTrainingResults(Path.of("data/trainingResults.csv"), club);
     } catch (IOException e) {
         IO.println("Der skete en fejl: " + e.getLocalizedMessage());
     }

@@ -88,6 +88,15 @@ public class Club{
         return null;
     }
 
+    public Member findMember(int memberID) {
+        for (Member member : getMembers()) {
+            if(member.getMemberID() == memberID) {
+                return member;
+            }
+        }
+        return null;
+    }
+
     public List<Member> getPaidMembers(){
       List<Member> result = new ArrayList<>();
       for (var member : members){

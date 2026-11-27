@@ -50,4 +50,12 @@ public class ClubMapper {
         return memberID + delimiter + result.getDisciplin() + delimiter + result.getTime() +
                 delimiter + result.getDate();
     }
+
+    public TrainingResult fromTrainingCsv(String line) {
+        String[] tokens = line.split(delimiter);
+        SwimDisciplin disciplin = SwimDisciplin.valueOf(tokens[1]);
+        double time = Double.parseDouble(tokens[2]);
+        LocalDate date = LocalDate.parse(tokens[3]);
+        return new TrainingResult(disciplin, time, date);
+    }
 }
