@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.ArrayList;
 
 public class UserInterface {
   private Club club;
@@ -194,9 +195,14 @@ public int getAvailableMemberID() {
     if (loginManager.loginTrainer(username, password)) {
       IO.println("1. Tilføj konkurrence resultat");
       IO.println("2. Tilføj trænings resultat");
+      IO.println("3. Få konkurrence top 5 pr disciplin");
+      IO.println("4. Få trænings top 5 pr disciplin ");
       int choice = Integer.parseInt(IO.readln("Vælg 1 eller 2: "));
       switch (choice) {
         case 1 -> createCompetitionResult();
+//        case 2 -> createTrainingResult();
+        case 3 -> showCompetitionTop5s();
+//        case 4 -> showTrainingTop5s();
       }
     } else {
       IO.println("Forkert brugernavn eller kodeord");
@@ -230,6 +236,42 @@ public int getAvailableMemberID() {
     } else {
       IO.println("Ingen medlemmer med det medlemsnummer.");
     }
+  }public void showCompetitionTop5s() {
+    int memberID = Integer.parseInt(IO.readln("Indtast medlemmets nummer: "));
+    MemberCompetitive competitionMedlem = club.findCompetitiveMember(memberID);
+
+    if (competitionMedlem == null) {
+      IO.println("Ingen konkurrencesvømmer med det medlemsnummer.");
+      return;
+    }
+
+    CompetitionResultTop5 top5 = new CompetitionResultTop5();
+
+    IO.println("");
+    IO.println("Top 5 for " + competitionMedlem.getName());
+    IO.println("");
+
+    for (SwimDisciplin disciplin : SwimDisciplin.values()) {
+      ArrayList<Double> times = top5.getTimes(competitionMedlem, disciplin);
+      ArrayList<Double> best = top5.getTop5(times);
+      printCompetitionTop5(disciplin, best);
+    }
+  }
+
+  public void printCompetitionTop5(SwimDisciplin disciplin, ArrayList<Double> times) {
+    IO.println("Top 5 in Competition " + disciplin);
+
+    if (times.isEmpty()) {
+      IO.println("Ingen resultater endnu");
+    }
+
+    for (int i = 0; i < times.size(); i++) {
+      int place = i + 1;
+      double time = times.get(i);
+      IO.println(place + ". " + time + " sekunder");
+    }
+
+    IO.println("");
   }
 }
 
