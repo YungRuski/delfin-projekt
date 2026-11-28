@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 public class UserInterface {
@@ -18,7 +19,7 @@ public class UserInterface {
         boolean running = true;
         while (running) {
             showMenu();
-            int choice = Integer.parseInt(IO.readln("Vælg et nummer fra menuen: "));
+            int choice = readInt("Vælg et nummer fra menuen: ");
 
             switch (choice) {
                 case 1 -> chairmanLogin();
@@ -45,14 +46,20 @@ public class UserInterface {
         String username = IO.readln("Username: ");
         String password = IO.readln("Password: ");
         if (loginManager.loginChairman(username, password)) {
-            IO.println("1. Almindeligt medlem");
-            IO.println("2. Konkurrencesvømmer");
-            IO.println("3. Fjern et medlem");
-            int choice = Integer.parseInt(IO.readln("Vælg medlems form: "));
-            switch (choice) {
-                case 1 -> createRegularMember();
-                case 2 -> createCompetitionMember();
-                case 3 -> removeMember();
+            boolean loggedIn = true;
+            while (loggedIn) {
+                IO.println("1. Almindeligt medlem");
+                IO.println("2. Konkurrencesvømmer");
+                IO.println("3. Fjern et medlem");
+                IO.println("0. Log ud");
+                int choice = readInt("Vælg en handling fra menuen: ");
+                switch (choice) {
+                    case 1 -> createRegularMember();
+                    case 2 -> createCompetitionMember();
+                    case 3 -> removeMember();
+                    case 0 -> loggedIn = false;
+                    default -> IO.println("Vælg et gyldigt tal fra menuen");
+                }
             }
         } else {
             IO.println("Forkert brugernavn eller kodeord");
@@ -68,7 +75,7 @@ public class UserInterface {
             IO.println("2. Medlemmer i restance");
             IO.println("3. Forventet kontigent");
             IO.println("4. Registre betaling");
-            int choice = Integer.parseInt(IO.readln("Vælg oversigt: "));
+            int choice = readInt("Vælg oversigt: ");
             switch (choice) {
                 case 1 -> showPaidMembers();
                 case 2 -> showUnPaidMembers();
@@ -82,12 +89,18 @@ public class UserInterface {
     }
 
     public int getAvailableMemberID() {
-        int memberID = Integer.parseInt(IO.readln("Indtast medlemsnummer: "));
-        while (club.memberIdExists(memberID)) {
-            IO.println("Medlemsnummeret eksistere allerede, prøv igen.");
-            memberID = Integer.parseInt(IO.readln("Indtast medlemsnummer: "));
+        while (true) {
+                int memberID = readInt("Indtast medlemsnummer: ");
+                if (memberID < 1) {
+                    IO.println("Medlemsnummeret skal være større end 0");
+                    continue;
+                }
+                if (club.memberIdExists(memberID)) {
+                    IO.println("Medlemsnummeret eksistere allerede, prøv igen.");
+                    continue;
+                }
+                return memberID;
         }
-        return memberID;
     }
 
     public void saveMembers() {
@@ -149,7 +162,7 @@ public class UserInterface {
     }
 
     public void registerPayment() {
-        int memberID = Integer.parseInt(IO.readln("Indtast medlemsnummer: "));
+        int memberID = readInt("Indtast medlemsnummer: ");
         for (var member : club.getMembers()) {
             if (member.getMemberID() == memberID) {
                 member.setPaid(true);
@@ -164,15 +177,15 @@ public class UserInterface {
     public void createRegularMember() {
         int memberID = getAvailableMemberID();
         String name = IO.readln("Indtast navn på medlem: ");
-        LocalDate dateOfBirth = LocalDate.parse(IO.readln("Indtast medlemmets fødselsdato (YYYY-MM-DD): "));
+        LocalDate dateOfBirth = readDate("Indtast medlemmets fødselsdato (YYYY-MM-DD): ");
 
-        int statusChoice = Integer.parseInt(IO.readln("""
+        int statusChoice = readInt("""
                 Vælg medlemsstatus:
                 1. Aktiv
-                2. Passiv \n"""));
+                2. Passiv \n""");
         boolean isActive;
         while (statusChoice != 1 && statusChoice != 2) {
-            statusChoice = Integer.parseInt(IO.readln("Tast gyldigt indput"));
+            statusChoice = readInt("Tast gyldigt indput");
         }
         if (statusChoice == 1) {
             isActive = true;
@@ -186,13 +199,13 @@ public class UserInterface {
     public void createCompetitionMember() {
         int memberID = getAvailableMemberID();
         String name = IO.readln("Indtast navn på medlem: ");
-        LocalDate dateOfBirth = LocalDate.parse(IO.readln("Indtast medlemmets fødselsdato (YYYY-MM-DD): "));
+        LocalDate dateOfBirth = readDate("Indtast medlemmets fødselsdato (YYYY-MM-DD): ");
         club.addMember(new MemberCompetitive(memberID, name, dateOfBirth));
         saveMembers();
     }
 
     public void removeMember() {
-        int memberID = Integer.parseInt(IO.readln("Tast ID'et på medlemmet der skal fjernes: "));
+        int memberID = readInt("Tast ID'et på medlemmet der skal fjernes: ");
         club.removeMember(memberID);
         saveMembers();
     }
@@ -204,7 +217,7 @@ public class UserInterface {
         if (loginManager.loginTrainer(username, password)) {
             IO.println("1. Tilføj konkurrence resultat");
             IO.println("2. Tilføj trænings resultat");
-            int choice = Integer.parseInt(IO.readln("Vælg 1 eller 2: "));
+            int choice = readInt("Vælg 1 eller 2: ");
             switch (choice) {
                 case 1 -> createCompetitionResult();
                 case 2 -> createTrainingResult();
@@ -219,22 +232,22 @@ public class UserInterface {
         for (int i = 0; i < disciplinList.length; i++) {
             IO.println((i + 1) + ": " + disciplinList[i]);
         }
-        int disciplinChoice = Integer.parseInt(IO.readln("Vælg en disciplin: "));
+        int disciplinChoice = readInt("Vælg en disciplin: ");
         while (disciplinChoice < 1 || disciplinChoice > disciplinList.length) {
-            disciplinChoice = Integer.parseInt(IO.readln("Indtast gyldigt tal fra menuen: "));
+            disciplinChoice = readInt("Indtast gyldigt tal fra menuen: ");
         }
         return disciplinList[disciplinChoice - 1];
     }
 
     public void createCompetitionResult() {
-        int memberID = Integer.parseInt(IO.readln("Indtast medlemmets nummer: "));
+        int memberID = readInt("Indtast medlemmets nummer: ");
         MemberCompetitive competitive = club.findCompetitiveMember(memberID);
         if (competitive != null) {
             SwimDisciplin selectedDisciplin = selectSwimDisciplin();
             String competition = IO.readln("Indtast stævne: ");
-            int placement = Integer.parseInt(IO.readln("Indtast placering i konkurrencen: "));
-            double time = Double.parseDouble(IO.readln("Indtast gennemført tid(sekunder): "));
-            LocalDate date = LocalDate.parse(IO.readln("Indtast datoen for konkurrencen(YYYY-MM-DD): "));
+            int placement = readInt("Indtast placering i konkurrencen: ");
+            double time = readDouble("Indtast gennemført tid(sekunder): ");
+            LocalDate date = readDate("Indtast datoen for konkurrencen(YYYY-MM-DD): ");
             CompetitionResult result = new CompetitionResult(selectedDisciplin, competition, placement, time, date);
             competitive.addCompetitionResult(result);
             saveCompetitionResults();
@@ -244,17 +257,47 @@ public class UserInterface {
     }
 
     public void createTrainingResult() {
-        int memberID = Integer.parseInt(IO.readln("Indtast medlemmets nummer: "));
+        int memberID = readInt("Indtast medlemmets nummer: ");
         MemberCompetitive competitive = club.findCompetitiveMember(memberID);
         if (competitive != null) {
             SwimDisciplin selectedDisciplin = selectSwimDisciplin();
-            double time = Double.parseDouble(IO.readln("Indtast gennemført tid(sekunder): "));
-            LocalDate date = LocalDate.parse(IO.readln("Indtast datoen for træningen(YYYY-MM-DD): "));
+            double time = readDouble("Indtast gennemført tid(sekunder): ");
+            LocalDate date = readDate("Indtast datoen for træningen(YYYY-MM-DD): ");
             TrainingResult result = new TrainingResult(selectedDisciplin, time, date);
             competitive.addTrainingResults(result);
             saveTrainingResults();
         } else {
             IO.println("Ingen medlemmer med det medlemsnummer.");
+        }
+    }
+
+    private int readInt (String message) {
+        while (true) {
+            try {
+                return Integer.parseInt(IO.readln(message));
+            } catch (NumberFormatException e) {
+                IO.println("Tast et gyldigt heltal");
+            }
+        }
+    }
+
+    private double readDouble(String message) {
+        while (true) {
+            try {
+                return Double.parseDouble(IO.readln(message));
+            } catch (NumberFormatException e) {
+                IO.println("Tast et gyldigt resultat");
+            }
+        }
+    }
+
+    private LocalDate readDate(String message) {
+        while (true) {
+            try {
+                return LocalDate.parse(IO.readln(message));
+            } catch (DateTimeParseException e) {
+                IO.println("Tast en gyldig dato");
+            }
         }
     }
 }
